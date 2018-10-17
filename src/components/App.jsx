@@ -1,40 +1,51 @@
 import React from 'react';
-import { Switch, Route, withRouter } from 'react-router-dom';
+import { Switch, Route, withRouter, Redirect } from 'react-router-dom';
 import Progress from 'antd/lib/progress';
 import Layout from 'antd/lib/layout';
 import { connect } from 'react-redux';
+import Auth from '../utilities/auth';
 import asyncComponent from './async-component';
 
 import 'antd/dist/antd.css';
 import '../styles/main.scss';
 
 const Dashboard = asyncComponent( () => import( './dashboard.jsx' ).then( module => module.default ));
+const LoginView = asyncComponent( () => import( './login.jsx' ).then( module => module.default ));
+const AuthView = asyncComponent( () => import( './auth.jsx' ).then( module => module.default ));
+
+const auth = new Auth();
 
 class App extends React.Component{
 
 
     componentDidMount(){
-        document.getElementById('pre-loading-cover').style.display = 'none';
+        
+        const cover = document.getElementById('pre-loading-cover');
+
+        if ( cover ){
+            cover.style.display = 'none';
+        }
     }
 
     componentDidUpdate( prevProps ){
 
         if ( this.props.global.isPageLoaded && !prevProps.global.isPageLoaded ){
 
-            if ( this.props.location.pathname === '/t' || this.props.location.pathname.startsWith('/t/') ){
+            const { user } = this.props;
+            const isLogged = user.idToken !== null;
+
+            if ( this.props.location.pathname.startsWith('/auth') ){
                 return;
             }
 
-            const { user } = this.props;
+            if ( isLogged ){
 
-            if ( user !== null && !!user.token ){
-
-                if ( this.props.location.pathname.startsWith('/u') ){
-                    this.props.history.push('/');
+                if ( this.props.location.pathname.startsWith('/login') ){
+                    this.props.history.push('/note');
                 }
 
-            }else if (!this.props.location.pathname.startsWith('/u')){
-                this.props.history.push('/u');
+            }else if (!this.props.location.pathname.startsWith('/login')){
+                this.props.history.push('/login');
             }
 
         }
@@ -50,7 +61,9 @@ class App extends React.Component{
                 { global.pageLoadingPerc > 0 && <Progress className='global-loader-progress' showInfo={false} status="active" strokeLinecap="square" percent={global.pageLoadingPerc} />}
                 { !global.isPageLoaded && global.pageLoadingPerc < 100 && <div className='red-loading-view fixed'></div> }
                 <Switch>
-                    <Route paht='/' component={ Dashboard } />
+                    <Route path="/login" render={ props => <LoginView {...props} auth={ auth } /> } />
+                    <Route path='/note' render={ props => <Dashboard {...props} auth={ auth } /> } />
+                    <Route paht="/auth" render={ props => <AuthView {...props} auth={ auth } /> } />
                 </Switch>
             </Layout>
         );

@@ -1,1 +1,84 @@
 @import './constant.scss';
+
+.login-wrapper{
+    text-align: center;
+
+    .ant-layout-content{
+        padding: 72px 0 24px;
+    }
+
+    .login-inner{
+        border-radius: 5px;
+        border:1px solid lightgray;
+        background-color: white;
+        min-height: 400px;
+        width:380px;
+        margin: 0 auto;
+        position: relative;
+        
+        .inner-header{
+            height:100px;
+            background-color: #f7f7f7;
+            border-bottom: 1px solid lightgray;
+            h1{
+                color:#5a5a5a;
+            }
+        }
+
+        .login-form{
+            width:90%;
+            margin:0 auto;
+            padding-top: 40px;
+        }
+
+        .login-button{
+            position: absolute;
+            width:100%;
+            bottom:0;
+            left:0;
+            font-size: 18px;
+            height: 55px;
+            line-height: 55px;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            background-color: rgb(24,144,255)
+        }
+    }
+}
+
+.auth-wrapper{
+    text-align: center;
+
+    .auth-inner{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        height:300px;
+        margin:100px auto;
+        background-color: white;
+        border-radius: 5px;
+        width:350px;
+        border:1px solid lightgray;
+    }
+}
+
+.dahsboard-wrapper{
+
+    .dashboard-inner{
+        
+        width:1000px;
+        margin:70px auto;
+
+        .ant-avatar{
+            cursor: pointer;
+            
+            .anticon-user{
+                font-size: 22px !important;
+            }
+        }
+
+
+    }
+
+}

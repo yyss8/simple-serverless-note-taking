@@ -28,14 +28,41 @@ module.exports = (env, options) =>{
             }
         }),
         new MiniCssExtractPlugin({
-            filename: onProd ? "styles/m/[name].[hash].css":"[name].css",
-            chunkFilename: onProd ? "styles/m/[id].[hash].css":"[id].css"
+            filename: onProd ? "styles/[name].[hash].css":"[name].css",
+            chunkFilename: onProd ? "styles/[id].[hash].css":"[id].css"
         })
     ];
     
     let moduleLoaders = [
         { test: /\.js$/, use: 'babel-loader', exclude: /node_modules/ },
-        { test: /\.jsx$/, use: 'babel-loader', exclude: /node_modules/ }
+        { test: /\.jsx$/, use: 'babel-loader', exclude: /node_modules/ },
+        { test: /\.(png|jpg|gif)$/, use: [{
+            loader:'url-loader',
+            options:{
+                limit:8192
+            }
+        }]},
+        { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, use: [{
+            loader:'url-loader',
+            options:{
+                limit:10000,
+                mimetype:'image/svg+xml'
+            }
+        }]},
+        {
+            test: /\.less$/,
+            use: [{
+              loader: 'style-loader',
+            }, {
+              loader: 'css-loader', // translates CSS into CommonJS
+            }, {
+                loader: 'less-loader',
+                options: {
+                    javascriptEnabled: true,
+                },
+            }
+            ]
+        }
     ];
 
     let optimization = {
@@ -100,7 +127,7 @@ module.exports = (env, options) =>{
             new OptimizeCSSAssetsPlugin({})
         ];
 
-        plugins.push( new UploaderPlugin(uploaderOptions) );
+        // plugins.push( new UploaderPlugin(uploaderOptions) );
         
     }else{
         //store css content in style tag for immediately hot reload for development mode  

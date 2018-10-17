@@ -42,17 +42,27 @@ const userReducer = (user = {}, action) =>{
         case 'USER_LOGIN':
             return action.user;
         case 'USER_LOGOUT':
-            return null;
+            return {
+                idToken:null,
+                accessToken:null,
+                expiredAt:null
+            };
     }
 
     return user;
 
 }
 
-const loggedUser = localStorage.getItem('user');
+const idToken = localStorage.getItem('id_token');
+const accessToken = localStorage.getItem('access_token');
+const expired_at = localStorage.getItem('expires_at');
 
 const initialStates = {
-    user:loggedUser === null ? null:JSON.parse( loggedUser ),
+    user:{
+        idToken:idToken || null,
+        accessToken:accessToken || null,
+        expiredAt:expired_at || null
+    },
     global:{
         isPageLoaded:false,
         pageLoadingPerc:0,
