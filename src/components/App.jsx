@@ -19,7 +19,6 @@ class App extends React.Component{
 
 
     componentDidMount(){
-        
         const cover = document.getElementById('pre-loading-cover');
 
         if ( cover ){

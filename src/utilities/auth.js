@@ -4,7 +4,7 @@ export default class Auth {
   auth0 = new auth0.WebAuth({
     domain: 'scitweb.auth0.com',
     clientID: 'YvfbCySZ8uh3a5sXMBHoweBHdpPkMZWK',
-    redirectUri: 'http://localhost:3111/auth',
+    redirectUri: AUTH0_REDIRECT,
     responseType: 'token id_token',
     audience: 'https//s3.scitweb.com',
     scope: 'openid'

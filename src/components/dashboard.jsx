@@ -20,7 +20,8 @@ class DashboardView extends React.Component{
             isEditingNote:false,
             editingNote:'',
             isSubmitting:false,
-            editingIndex:-1
+            editingIndex:-1,
+            username:''
         };
     }
 
@@ -35,7 +36,20 @@ class DashboardView extends React.Component{
     }
 
     componentDidMount(){
+
+        const { user } = this.props; 
+
         this.fetchNotes();
+
+        if ( user.accessToken ){
+            this.props.auth.auth0.client.userInfo( user.accessToken, (err, profile) =>{
+                if ( err ){
+                    return;
+                }
+
+                this.setState({ username:profile.sub });
+            });
+        }
     }
 
     fetchNotes(){
@@ -47,11 +61,11 @@ class DashboardView extends React.Component{
             }
         };
 
-        getJson( {}, 'http://localhost:4444/notes', params )
+        getJson( {}, `${API_URL}/notes`, params )
         .then( res =>{
             if ( res.status === 'ok' ){
                 this.setState({
-                    notes:res.result.notes,
+                    notes:res.result.notes.map( (note, index) => ({...note, key:`note-${index}`}) ),
                     isLoading:false
                 });
             }else{
@@ -91,7 +105,7 @@ class DashboardView extends React.Component{
         };
 
         const isNew = this.state.editingIndex === -1;
-        const url = 'http://localhost:4444/notes' + (isNew ? '':`/${this.state.notes[this.state.editingIndex].note_id}`) ;
+        const url = `${API_URL}/notes` + (isNew ? '':`/${this.state.notes[this.state.editingIndex].note_id}`) ;
         const data = {note:this.state.editingNote};
 
         const succesAction = res =>{
@@ -101,7 +115,7 @@ class DashboardView extends React.Component{
 
                 if ( isNew ){
                     notes = updater( this.state.notes , {
-                        $push:[ res.result.note ]
+                        $push:[ {...res.result.note, key:`note-${this.state.notes.length + 1}`} ]
                     });
                 }else{
                     notes = updater( this.state.notes , {
@@ -192,7 +206,7 @@ class DashboardView extends React.Component{
             title:'Confirm to delete note',
             onOk:() =>{
                 return new Promise( finished =>{
-                    deleteJson( {}, `http://localhost:4444/notes/${this.state.notes[index].note_id}`, params )
+                    deleteJson( {}, `${API_URL}/notes/${this.state.notes[index].note_id}`, params )
                     .then( res =>{
                         
                         if ( res.status === 'ok' ){
@@ -231,7 +245,7 @@ class DashboardView extends React.Component{
         const dropdownContent = (
             <Menu style={ {width:180} }>
                 <Menu.Item style={ {cursor:'default',color:'rgba(0, 0, 0, 0.65)'} } disabled={true} >
-                    <span>Welcome</span>
+                    <span>Welcome { this.state.username !== '' ? this.state.username:'' }</span>
                 </Menu.Item>      
                 <Menu.Divider />
                 <Menu.Item>
