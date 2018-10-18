@@ -11,6 +11,7 @@ module.exports = (env, options) =>{
     const publicPath = '/';
     const API_URL = onProd ? 'https://nt.scitweb.com/v2':'http://localhost:4444';
     const AUTH0_REDIRECT = onProd ? 'http://ntf.scitweb.com/auth':'http://localhost:3111/auth';
+    const AUTH0_BASE = onProd ? 'http://ntf.scitweb.com':'http://localhost:3111';
 
     const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
         template: './src/index.html',
@@ -29,6 +30,7 @@ module.exports = (env, options) =>{
             JWS_AUDIENCE:JSON.stringify( process.env.JWS_AUDIENCE ),
             JWS_ISSUER:JSON.stringify( process.env.JWS_ISSUER ),
             AUTH0_REDIRECT:JSON.stringify( AUTH0_REDIRECT ),
+            AUTH0_BASE:JSON.stringify( AUTH0_BASE ),
             __VERSION__: JSON.stringify(require('./package.json').version),
             'process.env': {
                 'NODE_ENV': JSON.stringify(options.mode)

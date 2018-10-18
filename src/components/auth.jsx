@@ -12,7 +12,6 @@ class AuthView extends React.Component{
     componentWillMount(){
 
         const parsed = qs.parse( location.hash.replace('#','') );
-        console.log(location.search);
         if ( !parsed.access_token ){
             this.props.history.push('/login');
             return;

@@ -164,7 +164,10 @@ class DashboardView extends React.Component{
             onOk:() =>{
                 this.props.dispatch( userLogout() );
                 this.props.auth.logout();
-                this.props.history.push('/');
+                this.props.auth.auth0.logout({
+                    clientID:'YvfbCySZ8uh3a5sXMBHoweBHdpPkMZWK',
+                    returnTo:`${AUTH0_BASE}/`
+                });
             }
         });
 
